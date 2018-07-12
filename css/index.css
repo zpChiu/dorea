@@ -1,0 +1,44 @@
+/* 样式清除 */
+html,body{
+    margin: 0;
+    padding: 0;
+}
+.btn-explain{
+    width: 713px;
+}
+.btn-explain{
+    padding: 10px 0px;
+}
+.btn-explain>table{
+    margin: 10px 0;   
+    width: 100%; 
+    text-align: center;
+    color: #111;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.btn-explain>table>thead{
+    background-color: #f2f2f2;
+}
+.btn-explain>table>tbody{
+    font-size: 13px;
+}
+.btn-explain>table>thead td{
+    padding: 5px 10px;
+}
+.tips-wrap{
+    margin: 50px 0px;
+    text-align: center;
+}
+.tips-wrap button{
+    margin: 0px 55px;
+}
+.form-wrap{
+    padding: 50px 10px;
+}
+.form-wrap span{
+    display: inline-block;
+}
+.new-select{
+    display: inline-block;
+}

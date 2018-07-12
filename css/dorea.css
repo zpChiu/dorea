@@ -1,0 +1,228 @@
+/*
+    * 按钮样式
+*/
+body{
+    font-family: "Microsoft Yahei";
+    font-size: 12px;
+}
+button.btn{
+    padding: 2px 20px;    
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;    
+    white-space: nowrap;  
+    border: none;      
+    border-radius: 2px;
+    cursor: pointer;
+    outline: 0;
+    -webkit-appearance: none;
+    transition: all .3s;
+    -webkit-transition: all .3s;
+    box-sizing: border-box;
+}    
+button.btn:hover{
+    opacity: .83;     
+}
+button.btn-click{
+    background-color: #009688;        
+}
+button.btn-sure{
+    background-color: #1773cc;        
+}
+button.btn-cancel{
+    background-color: #d83d3d;        
+}
+/* 弹窗样式 */
+@keyframes transtate{
+    from { opacity:0; }
+    to { opacity:1; }
+}
+.dialog-bg{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    animation: transtate .5s;
+    -webkit-animation: transtate .5s;
+}
+.dialog{
+    margin-top: -100px;
+    margin-left: -135px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 270px;
+    min-width: 270px;
+    background-color: #e7e7e7;
+    border-radius: 2px;
+    box-shadow: 1px 1px 50px rgba(0,0,0,.3);
+    z-index: 99;
+}
+.dialog-title{
+    padding: 0 30px 0 13px;
+    height: 35px;
+    line-height: 35px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    color: #333;
+    overflow: hidden;
+    background-color: #F8F8F8;
+    border-radius: 2px 2px 0 0;
+}
+.dialog-content{
+    position: relative;
+    padding: 15px;
+    line-height: 20px;
+    word-break: break-all;
+    overflow: hidden;
+    font-size: 13px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.dialog-btn{
+    text-align: center;
+    padding: 0 15px 12px;
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.dialog-close{
+    display: inline-block;    
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 25px;
+    height: 36px;
+    line-height: 36px;    
+    font-size: 14px;    
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+}
+.dialog-btn a{
+    margin: 5px 5px 0;
+    padding: 7px 17px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+    color: #333;    
+    background-color: #009f95;
+    border-radius: 2px;
+    font-weight: 400;
+    cursor: pointer;
+    text-decoration: none;
+}
+.dialog-btn a:hover{
+    opacity: .83;
+}
+.tips{
+    position: absolute;
+    display: inline-block;
+    padding: 8px 15px;
+    min-width: 12px;
+    min-height: 22px;
+    line-height: 22px;    
+    font-size: 12px;
+    text-align: left;
+    color: #fff;    
+    background-color: #000;
+    border-radius: 2px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+    animation: transtate .5s;
+    -webkit-animation: transtate .5s;
+}
+.tips>i {
+    position: absolute;
+    border-left: 0px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 20px solid transparent;
+}
+/* form表单格式化 */
+input[type='text'],select{
+    display: inline-block;
+    height: 38px;
+    line-height: 1.3;
+    font-size: 12px;
+    color: #555;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    box-sizing: border-box;    
+}
+input[type='text']{
+    padding: 0 0 0 10px;
+}
+select{
+   padding: 10px 13px; 
+   /* 清除下拉的小箭头图标
+   appearance:none;
+   -moz-appearance:none;
+   -webkit-appearance:none; */
+}
+/* 清除ie的默认选择框样式清除，隐藏下拉箭头
+select::-ms-expand { 
+    display: none; 
+} */
+select>option:hover{
+    background-color: red;
+}
+select>option{
+    display: inline-block;
+    height: 30px;
+    padding: 10px 0px;
+}
+input[type='text']:hover{
+    border-color: #D2D2D2;
+}
+input[type='text']:focus,select:focus{
+    border-color: #D2D2D2;
+    outline:none;
+    outline-offset: 0;
+}
+/* 自定义select下拉框 start*/
+.select{
+    position:relative;
+    width: 150px;
+}
+.select>span{
+    padding: 0px 17px; 
+    width:150px; 
+    height:38px; 
+    line-height:38px; 
+    border:1px solid #e6e6e6; 
+    background:#fff url("../images/select-down1.png") no-repeat right center;
+    background-size: 22px; 
+    color:#807a62; 
+    cursor:pointer;
+    box-sizing: border-box;
+}
+.select>ul{
+    position:absolute;  
+    display: none;     
+    margin-top:2px;       
+    padding: 0;
+    width:100%; 
+    background-color:#fff; 
+    border:1px solid #e6e6e6;  
+    animation: transtate .5s;
+    -webkit-animation: transtate .5s;
+    box-sizing: border-box;
+}
+.select>ul>li{
+    height:24px; 
+    line-height:24px; 
+    text-indent:17px;
+    list-style: none;
+}
+.select>ul>li>a{
+    display:block; 
+    height:24px; 
+    color:#807a62; 
+    text-decoration:none;
+}
+.select>ul>li>a:hover{
+    color:#807a62;
+}
+/* end*/

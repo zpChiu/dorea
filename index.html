@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/dorea.css">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+   <button class="btn btn-click">点击按钮</button> 
+   <button class="btn btn-sure">确定按钮</button> 
+   <button class="btn btn-cancel">取消按钮</button> 
+   <button class="btn btn-random">随机色按钮</button> 
+   <button class="btn btn-hover-random">随机色按钮(悬浮)</button> 
+   <button class="btn btn-hover-random2" style="background-color: #009688;">随机色按钮2(悬浮)</button> 
+   <div class="btn-explain">
+        <table border="1">
+            <thead>
+                <tr>
+                    <td width="170px">名称</td>
+                    <td width="150px">样式使用</td>
+                    <td>说明</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>点击</td>
+                    <td>btn-click</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>确定</td>
+                    <td>btn-sure</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>取消</td>
+                    <td>btn-cancel</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>随机色</td>
+                    <td>btn-random</td>
+                    <td>进入页面时，会随机给按钮一个随机色</td>
+                </tr>
+                <tr>
+                    <td>随机色(悬浮)</td>
+                    <td>btn-hover-random</td>
+                    <td>鼠标悬浮时颜色会改变</td>
+                </tr>
+                <tr>
+                    <td>随机色(悬浮)</td>
+                    <td>btn-hover-random</td>
+                    <td>鼠标悬浮时颜色会改变，鼠标离开后会变回之前的颜色</td>
+                </tr>
+            </tbody>
+        </table>
+   </div>
+   <div class="dialog-wrap">
+        <button class="btn btn-click page-dialog-btn">弹窗1</button> 
+        <button class="btn btn-click page-dialog-btn2">弹窗2</button> 
+   </div>
+    <div class="tips-wrap">
+        <button class="btn btn-random tips-up">上</button> 
+        <button class="btn btn-random tips-right">右</button> 
+        <button class="btn btn-random tips-down">下</button> 
+        <button class="btn btn-random tips-left  ">左</button> 
+    </div>
+
+   <div class="form-wrap">
+        <span>
+            账号：<input type="text" placeholder="请输入内容">
+            <select>
+                <option>请选择</option>
+                <option>首都北京</option>
+                <option>直辖市上海</option>
+                <option>广东省广州</option>
+                <option>广东省深圳</option>
+            </select>
+        </span>
+        <div class="new-select">
+            <div class="select">
+                <span>请选择</span>
+                <ul> 
+                    <li><a href="javascript:;">长沙</a></li> 
+                    <li><a href="javascript:;">北京</a></li> 
+                    <li><a href="javascript:;">南京</a></li> 
+                    <li><a href="javascript:;">堪培拉</a></li> 
+                    <li><a href="javascript:;">多伦多</a></li> 
+                </ul> 
+            </div>
+        </div>
+   </div>
+
+   <script src="./js/dorea.js"></script>
+</body>
+</html>
