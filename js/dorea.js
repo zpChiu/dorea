@@ -12,7 +12,11 @@ window.onload=function (){
          * btnRandom - 给btn-random类名的按钮一个随机色
          * btnHoverRandom - 给btn-hover-random类名的按钮一个悬浮事件：悬浮时候背景颜色随机
          * dialog - 弹框启动
+         * tips - 小提示
+         * load - 加载提示
          * select - 下拉菜单
+         * ie - ie 7,8,9,10,11,edge的浏览器处理 ie({"ie8":callback()}) 
+         *    备注：ie5会执行ie7的回调，因为ie5返回的ua是ie7的
          */
         init:function (){
             this.btnRandom();
@@ -58,16 +62,35 @@ window.onload=function (){
             query(".tips-up")[0].addEventListener("click",function (){
                 dorea.tips({
                     ele:".tips-up",
+                    content:"我是一个在元素上方的小tips",
                     type:1,
                     bgClr:"rgba(123,123,123,.5)",
                     end:function (){
                         console.log(query(".tips-up")[0].innerHTML);
                     }
                 });
+                $.ajax({
+                    url: "http://baidu.com",
+                    dataType: 'json',
+                    type: 'GET',
+                    headers: {
+                        test: "application/json; charset=utf-8"
+                    },
+                    // beforeSend: function (xhr) {
+                    //     xhr.setRequestHeader("Test", "testheadervalue");
+                    //     // xhr.setRequestHeader("Test2", "testheadervalue");
+                    // },
+                    async: false,
+                    cache: false,
+                    success: function (sResponse) {
+                    }
+                });
+
             });
             query(".tips-right")[0].addEventListener("click",function (){
                 dorea.tips({
                     ele:".tips-right",
+                    content:"我是一个在元素右方的小tips",
                     type:2,
                     bgClr:"rgba(13,13,13,.5)",
                     end:function (){
@@ -78,6 +101,7 @@ window.onload=function (){
             query(".tips-down")[0].addEventListener("click",function (){
                 dorea.tips({
                     ele:".tips-down",
+                    content:"我是一个在元素下方的小tips",
                     type:3,
                     bgClr:"rgba(123,173,13,.5)",
                     end:function (){
@@ -88,7 +112,7 @@ window.onload=function (){
             query(".tips-left")[0].addEventListener("click",function (){
                 dorea.tips({
                     ele:".tips-left",
-                    content:"我是一个tips",
+                    content:"我是一个在元素左方的小tips",
                     type:4,
                     bgClr:"rgba(12,132,13,.5)",
                     end:function (){
@@ -96,10 +120,34 @@ window.onload=function (){
                     }
                 });
             });
+            query(".page-load-btn")[0].addEventListener("click",function (){
+                dorea.load({
+                    content:"正在加载中..."
+                });
+            });
             this.select();
         },
-        child:function (ele,child){
-
+        ie:function (param){
+            var ua = navigator.userAgent,
+                isIE = ua.indexOf("compatible") > -1 && ua.indexOf("MSIE") > -1, //ie<11 
+                isEdge = ua.indexOf("Edge") > -1 && !isIE,   
+                isIE11 = ua.indexOf('Trident') > -1 && ua.indexOf("rv:11.0") > -1; 
+            if(isIE) {
+                var regIE = new RegExp("MSIE (\\d+\\.\\d+);");
+                regIE.test(ua)
+                var ver = parseFloat(RegExp["$1"]);
+                switch (ver) {
+                    case ver<7:
+                        break;
+                    default:
+                        param["ie"+ver]?param["ie"+ver]():"";
+                        break;
+                }                 
+            } else if(isEdge) {
+                param.edge? param.edge():"";
+            } else if(isIE11) {
+                param.ie11? param.ie11():"";
+            }
         },
         select:function (){
             var s = query(".select"),
@@ -378,6 +426,43 @@ window.onload=function (){
                 },config.time);
             }else{
                 console.warn("'ele' is undefined");
+            }
+        },
+        loadConfig:{
+            // ele:".load-test",
+            ele:"",
+            type:0,
+            bg:true,
+        },
+        load:function (parmConfig){
+            if (query(".load").length<1) {
+                var config = {},
+                    load = creatEle("div"),
+                    loadBg = creatEle("div")
+                    loadImg = new Image(),
+                    w = 0,
+                    h = 0;
+                load.className = "load";
+                loadBg.className = "load-bg";    
+                loadImg.className = "load-images"; 
+
+                for(var key in dorea.loadConfig){
+                    !parmConfig[key]? config[key] = dorea.loadConfig[key]:config[key] = parmConfig[key];
+                }
+                config.ele!=="" && query(config.ele).length===1?
+                    config.ele = query(config.ele)[0] : config.ele = document.body;
+                if (config.bg) {
+                    config.ele.appendChild(loadBg);                
+                }  
+                config.ele.appendChild(load);  
+                load.appendChild(loadImg);
+                loadImg.src = "../images/load"+config.type+".gif";
+                loadImg.onload=function(){
+                    w = loadImg.width;
+                    h = loadImg.height;
+                    load.style.marginTop = -h/2 +"px";
+                    load.style.marginLeft = -w/2 +"px";
+                };
             }
         }
     }
