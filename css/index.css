@@ -53,3 +53,7 @@ html,body{
     height: 500px;
     border:1px solid #555;
 }
+.timer-shaft-wrap{
+    margin: 0 auto;
+    padding: 50px 0;
+}

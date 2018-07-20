@@ -247,3 +247,70 @@ input[type='text']:focus,select:focus{
     color:#807a62;
 }
 /* end*/
+/* 时间线 */
+.timeline{
+    background-color: #fff;
+}
+.timeline>ul{
+    margin: 0 300px 0 auto;
+    width: 300px;
+}
+.timeline>ul>li{
+    position: relative;
+    list-style: none;
+}
+.timeline>ul>li::before{
+    display: block;
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0;
+    z-index: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #e6e6e6;
+}
+.timeline>ul>li div.timeline-content{
+    width: 300px;  
+}
+.timeline>ul>li:nth-child(even) div.timeline-content{
+    margin-left: -320px;
+}   
+.timeline>ul>li:nth-child(even) span{
+    text-align: right;
+}
+.timeline>ul>li:nth-child(odd) div.timeline-content{
+    padding-left: 30px;
+}
+.timeline>ul>li:nth-child(odd) img{
+    display: block;
+    padding: 10px 0;
+    width: 300px;
+    box-sizing: border-box;
+}
+.timeline>ul>li p{
+    margin: 0;
+    color: #555;
+}
+.timeline>ul>li span{
+    margin-bottom: 13px;
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+}
+.timeline>ul>li i{
+    position: absolute;
+    left: -3px;
+    top: 1px;
+    z-index: 10;
+    width: 17px;
+    height: 17px;
+    line-height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid #393D49;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+/* 时间线 end*/

@@ -15,12 +15,14 @@ window.onload=function (){
          * tips - 小提示
          * load - 加载提示
          * select - 下拉菜单
+         * timeLine - 时间线的小圆圈随机色
          * ie - ie 7,8,9,10,11,edge的浏览器处理 ie({"ie8":callback()}) 
          *    备注：ie5会执行ie7的回调，因为ie5返回的ua是ie7的
          */
         init:function (){
             this.btnRandom();
             this.btnHoverRandom();
+            this.timeLine();
             query(".page-dialog-btn")[0].addEventListener("click",function (){
                 dorea.dialog({
                     bg:true,
@@ -69,6 +71,7 @@ window.onload=function (){
                         console.log(query(".tips-up")[0].innerHTML);
                     }
                 });
+                //往header添加参数 测试
                 $.ajax({
                     url: "http://baidu.com",
                     dataType: 'json',
@@ -179,6 +182,12 @@ window.onload=function (){
                     span.innerHTML = this.innerHTML;
                 })
             }
+        },
+        timeLine:function (){
+            var circle = query(".tl-circle");
+            for(var i = 0;i<circle.length;i++){
+                circle[i].style.borderColor=dorea.randomRgbColor();
+            };
         },
         randomRgbColor:function (a){
             var r = Math.floor(Math.random() * 256); 
