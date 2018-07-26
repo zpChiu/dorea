@@ -8,21 +8,23 @@ window.onload=function (){
     
     var dorea = {
         /**
-         * randomRgbColor - 随机生成RGB颜色并返回rgb(r,g,b)格式颜色
-         * btnRandom - 给btn-random类名的按钮一个随机色
-         * btnHoverRandom - 给btn-hover-random类名的按钮一个悬浮事件：悬浮时候背景颜色随机
-         * dialog - 弹框启动
-         * tips - 小提示
-         * load - 加载提示
-         * select - 下拉菜单
-         * timeLine - 时间线的小圆圈随机色
-         * ie - ie 7,8,9,10,11,edge的浏览器处理 ie({"ie8":callback()}) 
-         *    备注：ie5会执行ie7的回调，因为ie5返回的ua是ie7的
+         * @function randomRgbColor - 随机生成RGB颜色并返回rgb(r,g,b)格式颜色
+         * @function btnRandom - 给btn-random类名的按钮一个随机色
+         * @function btnHoverRandom - 给btn-hover-random类名的按钮一个悬浮事件：悬浮时候背景颜色随机
+         * @function dialog - 弹框启动
+         * @function tips - 小提示
+         * @function load - 加载提示
+         * @function select - 下拉菜单
+         * @function timeLine - 时间线的小圆圈随机色
+         * @function lazyLoad - 图片懒加载 -待优化
+         * @function ie - ie 7,8,9,10,11,edge的浏览器处理 ie({"ie8":callback()}) 
+         *                备注：ie5会执行ie7的回调，因为ie5返回的ua是ie7的
          */
         init:function (){
             this.btnRandom();
             this.btnHoverRandom();
             this.timeLine();
+            this.lazyLoad();
             query(".page-dialog-btn")[0].addEventListener("click",function (){
                 dorea.dialog({
                     bg:true,
@@ -438,7 +440,6 @@ window.onload=function (){
             }
         },
         loadConfig:{
-            // ele:".load-test",
             ele:"",
             type:0,
             bg:true,
@@ -473,6 +474,32 @@ window.onload=function (){
                     load.style.marginLeft = -w/2 +"px";
                 };
             }
+        },
+        lazyLoad:function (){
+            /**
+             * @var n  图片索引
+             * @var ch 可视高度
+             * @var img 所有图片
+             * @var st 滚动高度
+             * @var sh 文档顶部到可视区域底部 = 可视高度+滚动高度
+             * @var htmlTop 图片距离页面顶部的距离
+             */
+            var n = 0,
+                ch = document.documentElement.clientHeight,     
+                img = query("img");  
+            window.onscroll = function (){               
+                var st = document.body.scrollTop || document.documentElement.scrollTop,
+                    sh = ch + st;
+                for (var i = n; i < img.length; i++) {
+                    var htmlTop = img[i].getBoundingClientRect().top;
+                    /* 判断是否进入可视区域 */
+                    if (htmlTop<sh && htmlTop<ch) {
+                        var that = img[i];
+                        that.setAttribute("src",that.getAttribute("data-src"));
+                        n = i + 1;
+                    }    
+                }           
+            };
         }
     }
     dorea.init();

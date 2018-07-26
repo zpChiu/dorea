@@ -247,46 +247,81 @@ input[type='text']:focus,select:focus{
     color:#807a62;
 }
 /* end*/
+
 /* 时间线 */
 .timeline{
-    background-color: #fff;
+    text-align: center;
+    background-color: #fff;    
 }
 .timeline>ul{
-    margin: 0 300px 0 auto;
-    width: 300px;
+    padding: 0;
+    display: inline-block;
+    width: 600px;
 }
 .timeline>ul>li{
     position: relative;
+    width: 50%;
+    min-height: 17px;
     list-style: none;
+    clear: both;    
 }
-.timeline>ul>li::before{
+/* 偶数的li在右侧 */
+.timeline>ul>li:nth-child(odd){
+    float: right;
+}
+.timeline>ul>li:nth-child(odd)::before{
     display: block;
     content: '';
     position: absolute;
-    left: 5px;
+    left: 0;
     top: 0;
     z-index: 0;
     width: 1px;
     height: 100%;
     background-color: #e6e6e6;
 }
-.timeline>ul>li div.timeline-content{
-    width: 300px;  
-}
-.timeline>ul>li:nth-child(even) div.timeline-content{
-    margin-left: -320px;
-}   
-.timeline>ul>li:nth-child(even) span{
-    text-align: right;
+.timeline>ul>li:nth-child(odd) i{
+    left: -8.5px;
 }
 .timeline>ul>li:nth-child(odd) div.timeline-content{
     padding-left: 30px;
 }
-.timeline>ul>li:nth-child(odd) img{
+/* 奇数的li在左侧 */
+.timeline>ul>li:nth-child(even){
+    float: left;
+}
+.timeline>ul>li:nth-child(even)::after{
+    display: block;
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #e6e6e6;
+}
+.timeline>ul>li:nth-child(even) i{
+    right: -8.5px;
+}
+.timeline>ul>li:nth-child(even) div.timeline-content{
+    padding-right: 30px;
+} 
+.timeline>ul>li:nth-child(even) span{
+    text-align: right;
+}
+
+/* 共同样式 */
+.timeline>ul>li div.timeline-content{
+    text-align: left;    
+    box-sizing: border-box;
+}   
+.timeline>ul>li img{
     display: block;
     padding: 10px 0;
-    width: 300px;
+    width: 100%;
     box-sizing: border-box;
+    background-color: #d3d3d3;
 }
 .timeline>ul>li p{
     margin: 0;
@@ -300,7 +335,6 @@ input[type='text']:focus,select:focus{
 }
 .timeline>ul>li i{
     position: absolute;
-    left: -3px;
     top: 1px;
     z-index: 10;
     width: 17px;
