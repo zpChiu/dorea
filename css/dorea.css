@@ -1,6 +1,13 @@
-/*
-    * 按钮样式
-*/
+/** 样式清除 */
+li{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+}
+/* 样式清除 end **/
+
+/** 按钮样式 */
 body{
     font-family: "Microsoft Yahei";
     font-size: 12px;
@@ -35,7 +42,8 @@ button.btn-sure{
 button.btn-cancel{
     background-color: #d83d3d;        
 }
-/* 弹窗样式 */
+/* 按钮样式 end **/
+/**  弹窗样式 */
 @keyframes transtate{
     from { opacity:0; }
     to { opacity:1; }
@@ -119,6 +127,8 @@ button.btn-cancel{
 .dialog-btn a:hover{
     opacity: .83;
 }
+/* 弹窗样式 end **/
+/* tips样式 */ 
 .tips{
     position: absolute;
     display: inline-block;
@@ -141,6 +151,7 @@ button.btn-cancel{
     border-right: 9px solid transparent;
     border-bottom: 20px solid transparent;
 }
+/* tips样式 end */
 /* 加载提示 */
 .load-bg{
     position: fixed;
@@ -163,7 +174,8 @@ button.btn-cancel{
 .load>img{
     display: block;
 }
-/* form表单格式化 */
+/* 加载提示 end**/
+/** form表单格式化 */
 input[type='text'],select{
     display: inline-block;
     height: 38px;
@@ -204,7 +216,8 @@ input[type='text']:focus,select:focus{
     outline:none;
     outline-offset: 0;
 }
-/* 自定义select下拉框 start*/
+/* form表单格式化 end **/
+/** 自定义select下拉框 */
 .select{
     position:relative;
     width: 150px;
@@ -248,9 +261,9 @@ input[type='text']:focus,select:focus{
 .select>ul>li>a:hover{
     color:#807a62;
 }
-/* end*/
+/* 自定义select下拉框 end **/
 
-/* 时间线 */
+/** 时间线 */
 .timeline{
     text-align: center;
     background-color: #fff;    
@@ -349,4 +362,58 @@ input[type='text']:focus,select:focus{
     cursor: pointer;
     box-sizing: border-box;
 }
-/* 时间线 end*/
+/* 时间线 end **/
+/** 分页 */
+.pagination{
+    display: inline-block;
+}
+.pagination>ul{
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    border: 1px solid #e2e2e2;
+}
+.pagination>ul>li{
+    float: left;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #e2e2e2;
+}
+.pagination>ul>li:first-child{
+    background-color: rgb(30, 159, 255);
+}
+.pagination>ul>li:last-child{
+    border-right-width: 0px;
+}
+.pagination>ul>li>a{
+    display: inline-block;
+    width: 38px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #333;
+}
+.pagination>ul>li>a:hover{
+    opacity: 0.7;
+}
+.pagination>a{
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #333; 
+    border: 1px solid #e2e2e2;
+}
+.pagination a.page-pre{
+    margin-right: -1px;
+    float: left;
+    color: #d2d2d2;
+    cursor: not-allowed;
+    border-right-width: 0px;    
+}
+.pagination a.page-next{
+    float: right;
+    border-left-width: 0px;
+}
+/* 分页 end **/

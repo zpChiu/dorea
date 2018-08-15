@@ -79,3 +79,23 @@ html,body{
     border-radius: 3px;
     border: 1px solid #555;
 }
+.download-wrap{
+    padding: 50px;
+}
+.download-wrap span{
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #555;
+    background-color: #d3d3d3;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.download-wrap span:hover{
+    color: red;
+}
+.pagination-wrap{
+    padding: 50px;
+}

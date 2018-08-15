@@ -4,6 +4,10 @@ window.onload=function (){
     dorea.select();
     dorea.timeLine();
     dorea.lazyLoad();
+    dorea.pagination({
+        // count: 10,
+        // limit: 5,
+    });
     dorea(".page-dialog-btn")[0].addEventListener("click",function (){
         dorea.dialog({
             bg:true,
@@ -20,7 +24,7 @@ window.onload=function (){
             end:function (){
                 console.log("我确实消失了");
             },
-            time:2000
+            // time:2000
         });
     });
     dorea(".page-dialog-btn2")[0].addEventListener("click",function (){
