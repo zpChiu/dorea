@@ -51,3 +51,15 @@ dorea.ie({
 ```
 dorea.select(); //下拉菜单
 ```
+```
+dorea.pagination({
+    count: 10, //总页数
+    limit: 5,  //限制显示多少页
+});
+该功能需要复制一下的hrml
+<div class="pagination">
+    <a href="javascript:;"  class="page-pre">上一页</a>
+    <ul></ul>
+    <a href="javascript:;" class="page-next">下一页</a>
+</div>
+```
