@@ -5,13 +5,43 @@ window.onload=function (){
     dorea.timeLine();
     dorea.lazyLoad();
     dorea.pagination({
-        // count: 10,
-        // limit: 5,
+        ele:".pagination-wrap",
+        count: 10,
+        limit: 5,
+        page:function (obj){
+            console.log(obj);
+        }
     });
+    dorea.pagination({
+        ele:".pagination-wrap2",
+        count: 5,
+        limit: 5,
+        page:function (obj){
+            console.log(obj);
+        }
+    });
+    dorea.pagination({
+        ele:".pagination-wrap3",
+        count: 1,
+        limit: 5,
+        page:function (obj){
+            console.log(obj);
+        }
+    });
+
+    dorea.date({
+        ele: "#dorea-date-input",
+    });
+    dorea.date({
+        ele: "#dorea-date-input2",
+        minyears: 2018,
+        maxyears: 2018
+    });
+
     dorea(".page-dialog-btn")[0].addEventListener("click",function (){
         dorea.dialog({
             bg:true,
-            title:"一个弹框的标题",
+            title:"<span style='color:#e7e7e7'>一个弹框的标题</span>",
             btn:["确定","关闭","选择"],
             btnCB:{
                 btn0:function (){

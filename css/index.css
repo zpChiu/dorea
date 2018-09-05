@@ -2,8 +2,6 @@
 html,body{
     margin: 0;
     padding: 0;
-    /* width: 100%; */
-    /* height: 100%; */
 }
 .btn-explain{
     width: 713px;
@@ -96,6 +94,27 @@ html,body{
 .download-wrap span:hover{
     color: red;
 }
-.pagination-wrap{
-    padding: 50px;
+.pagination-wrap,.pagination-wrap2,.pagination-wrap3{
+    padding: 10px 0px;
+    text-align: center;
+}
+h1{
+    font-size: 16px;
+    color: #555;
+}
+.date-wrap{
+    padding: 50px 0px;
+    text-align: center;
+}
+.scrollBar-wrap{
+    margin: 50px 0px 50px 30px;
+    position: relative;    
+    width: 200px;
+    height: 300px;
+    border: 1px solid #555;
+    overflow-y: scroll; 
+    box-sizing: border-box; 
+}
+.scrollBar-wrap > div{
+
 }

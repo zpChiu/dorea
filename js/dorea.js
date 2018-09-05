@@ -48,6 +48,18 @@
             }
             return siblings;
         },
+        removeClass:function (ele,cName){
+            var className = ele.className.split(/\s+/);
+            var pos = -1,i,len;
+            for(var i = 0,len = className.length;i<len;i++){
+                if (className[i] == cName) {
+                    pos=i;
+                    break;
+                }
+            }
+            className.splice(i,1);
+            ele.className = className.join(" ");
+        },
         ie:function (param){
             var ua = navigator.userAgent,
                 isIE = ua.indexOf("compatible") > -1 && ua.indexOf("MSIE") > -1, //ie<11 
@@ -97,7 +109,7 @@
                 a[j].addEventListener("click",function (event){
                     var that = this;
                         span = that.parentNode.parentNode.previousSibling.previousSibling;
-                    span.innerHTML = this.innerHTML;
+                    span.textContent = this.textContent;
                 })
             }
         },
@@ -210,10 +222,10 @@
             dorea(".dialog-title")[0].innerHTML = config.title;
             dorea(".dialog-title")[0].style.backgroundColor = config.titleClr;
             dorea(".dialog-content")[0].innerHTML = config.content;
-            dorea(".dialog-close")[0].innerHTML = "x";
+            dorea(".dialog-close")[0].textContent = "x";
             for(i=0;i<config.btn.length;i++){
                 dorea(".dialog-btn")[0].appendChild(creatEle("a")).className = "dialog-btn"+i;
-                dorea(".dialog-btn"+i)[0].innerHTML=config.btn[i];
+                dorea(".dialog-btn"+i)[0].textContent=config.btn[i];
                 dorea(".dialog-btn"+i)[0].style.backgroundColor=config.titleClr;//按钮背景色跟随标题背景色  
                 //给弹框按钮赋予点击事件及事件发生后，弹框销毁
                 (function (i){
@@ -428,150 +440,594 @@
              * 
             */
             var config = {
-                count: o.count || 10,
+                ele: o.ele || "dorea.pagination of ele",
+                count: o.count || 10, //总页数
                 limit: o.limit || 5, //每页显示的条数
+                page: o.page || function (obj){  },  //页码发生变化后的回调函数
             };
-            var count = config.count,
-                limit = config.limit,
-                eUl = dorea(".pagination ul")[0],
-                ePre = dorea(".pagination .page-pre")[0],
-                eNext = dorea(".pagination .page-next")[0],
-                eUlChild = eUl.children,
-                pnCount = limit < count ? pnCount = limit : pnCount = count,
-                midN = Math.ceil( pnCount / 2 );
-            /* 初始化上下翻页的页码 */
-            ePre.setAttribute("data-page","1");
-            eNext.setAttribute("data-page","1");  
-            
-            /* 
-             * @func renderPag
-             * @desc 渲染分页  
-             * @param { string } startN - 页码起始数  
-             * @param { string } currP - 当前页数 ，初始化该函数时可不传  
-             * @var childLen - 所有的子元素（页码）的长度 
-            */
-            var renderPag = function (startN,currP){
-                var childLen = eUlChild.length;
-                /* 渲染前先清空所有页码 */
-                for ( var d = childLen-1; d>=0; d-- ) {
-                    eUlChild[d].parentNode.removeChild(eUlChild[d]);
-                }
-                /* 渲染页码 */
-                for ( var i = startN; i <pnCount+startN; i++ ) {
-                    var eLi = creatEle("li"),
-                        eA = creatEle("a");
-                    eA.innerHTML = i;
-                    eA.setAttribute("href","javascript:;");
-                    eLi.setAttribute("data-page",i);
-                    eLi.appendChild(eA);
-                    eUl.appendChild(eLi);
+            if (config.ele!=="" && dorea(config.ele)[0]) {
+                var ele = dorea(config.ele)[0],
+                    count = config.count,
+                    limit = config.limit,
+                    page = config.page,
+                    ePagination = creatEle("div"),
+                    eUl = creatEle("ul"),
+                    ePre = creatEle("a"),
+                    eNext =creatEle("a"),
+                    pnCount = limit < count ? pnCount = limit : pnCount = count,
+                    midN = Math.ceil( pnCount / 2 ),
+                    fragment = document.createDocumentFragment(); 
+                /* 初始组件元素 */
+                ePagination.className = "pagination";
+                ePre.className = "page-pre";
+                eNext.className = "page-next";
+                ePre.textContent = "上一页";
+                eNext.textContent = "下一页";
+                ePre.href = "javascript:;";
+                eNext.href = "javascript:;";
+                ePre.setAttribute("data-page","1");
+                eNext.setAttribute("data-page","1");  
+                ePagination.appendChild(ePre);
+                ePagination.appendChild(eUl);
+                ePagination.appendChild(eNext);
+                fragment.appendChild(ePagination);
+                ele.appendChild(fragment);
+                
+                /* 
+                * @func renderPag
+                * @desc 渲染分页  
+                * @param { string } startN - 页码起始数  
+                * @param { string } currP - 当前页数 ，初始化该函数时可不传  
+                * @var childLen - 所有的子元素（页码）的长度 
+                */
+                var renderPag = function (startN,currP){
+                    var childLen = eUl.children.length;
+                    /* 渲染前先清空所有页码 */
+                    for ( var d = childLen-1; d>=0; d-- ) {
+                        eUl.children[d].parentNode.removeChild(eUl.children[d]);
+                    }
+                    /* 渲染页码 */
+                    for ( var i = startN; i <pnCount+startN; i++ ) {
+                        var eLi = creatEle("li"),
+                            eA = creatEle("a");
+                        eA.textContent = i;
+                        eA.setAttribute("href","javascript:;");
+                        eLi.setAttribute("data-page",i);
+                        eLi.appendChild(eA);
+                        fragment.appendChild(eLi);
 
-                    /* 添加页码的点击事件，获取当前页码currPage */
-                    eLi.addEventListener("click",function (){
-                        var currPage = this.getAttribute("data-page");
-                        turnPag(currPage);
-                        ePre.setAttribute("data-page",currPage);
-                        eNext.setAttribute("data-page",currPage);
-                    }); 
-                }
-                /* 每次重新渲染翻页时，判断当前页情况（是否属于首页和尾页） */
-                if (currP!==undefined) {
-                    if (currP=="1") {
-                        ePre.style.color = "#d2d2d2";
-                        ePre.style.cursor = "not-allowed";
-                        ePre.removeEventListener("click",preFn,false);
-                    }else if(currP==count){
-                        eNext.style.color = "#d2d2d2";
-                        eNext.style.cursor = "not-allowed";
-                        eNext.removeEventListener("click",nextFn,false);
+                        /* 添加页码的点击事件，获取当前页码currPage */
+                        eLi.addEventListener("click",function (){
+                            var currPage = this.getAttribute("data-page");
+                            turnPag(currPage);
+                            ePre.setAttribute("data-page",currPage);
+                            eNext.setAttribute("data-page",currPage);
+                        }); 
+                    }
+                    eUl.appendChild(fragment);
+                    
+                    /* 每次重新渲染翻页时，判断当前页情况（是否属于首页和尾页） */
+                    if (currP!==undefined) {
+                        if (currP=="1") {
+                            ePre.style.color = "#d2d2d2";
+                            ePre.style.cursor = "not-allowed";
+                            ePre.removeEventListener("click",preFn,false);
+                        }else if(currP==count){
+                            eNext.style.color = "#d2d2d2";
+                            eNext.style.cursor = "not-allowed";
+                            eNext.removeEventListener("click",nextFn,false);
+                        }else{
+                            ePre.style.color = "#333";
+                            ePre.style.cursor = "pointer";
+                            eNext.style.color = "#333";
+                            eNext.style.cursor = "pointer";
+                            ePre.addEventListener("click",preFn,false); 
+                            eNext.addEventListener("click",nextFn,false);
+                        } 
+                    }
+                };
+                /**
+                 * @func turnPag
+                 * @desc 翻页事件判断，主要用于点击事件发生后，进行页码渲染前的判断
+                 * @param { string } cp - 传入一个点击所获得的当前页数
+                 * 情况：1) count > limit
+                 *          a). limit的前半部分页码，例如 10,5 ，前半部分是 1,2 => 起始页为 1
+                 *          b). limit的后半部分页码，例如 10,5 ，后半部分是 9,10 => 起始页为 (count-limit)+1
+                 *          b). limit的中间部分，例如 10,5 ，中间部分是 4-7 => 起始页为 (当前页 - (limit/2))+1
+                 * 情况：2) count = limit => 起始页为 1
+                 * 情况：3) count < limit => 限制10条，但真实数据确只有5条
+                 *          a). 发生这类情况，限制条数应以总数据条数为准则
+                 * 
+                */
+                var turnPag = function (cp){
+                    /* 传递给page(obj)回调的参数 */
+                    var obj = {
+                        curr: cp.toString(),  //当前页码
+                        currEle: ""  //当前页码元素
+                    };
+                    if (count>limit) {
+                        if ( cp<=midN ) { //判断是否属于前部分
+                            renderPag(1,cp);
+                        }else if( cp<=count && cp>count - midN ){ //判断是否属于后部分
+                            renderPag( (count - limit)+1 ,cp) ;
+                        }else{
+                            renderPag( (cp-midN)+1 ,cp);
+                        }
+                    }else if (count===limit || count<limit) {
+                        renderPag(1);
                     }else{
-                        ePre.style.color = "#333";
-                        ePre.style.cursor = "pointer";
-                        eNext.style.color = "#333";
-                        eNext.style.cursor = "pointer";
-                        ePre.addEventListener("click",preFn,false); 
-                        eNext.addEventListener("click",nextFn,false);
+                        renderPag( (count - midN)-1 ,cp);
+                    }
+                    
+                    for (var i = 0; i<eUl.children.length; i++) {
+                        eUl.children[i].style.backgroundColor = "#fff";
+                        if (eUl.children[i].getAttribute("data-page") == cp) {
+                            eUl.children[i].style.backgroundColor = "#1E9FFF"; /* 选中状态 */
+                            obj.currEle = eUl.children[i];
+                        }
                     } 
+                    return page(obj);
+                };
+                /**
+                 * @func preFn 
+                 * @desc 上翻页
+                 * @func nextFn 
+                 * @desc 下翻页
+                 */
+                var preFn = function (){
+                    var currPage = this.getAttribute("data-page");
+                    currPage--;
+                    turnPag(currPage);
+                    ePre.setAttribute("data-page",currPage);
+                    eNext.setAttribute("data-page",currPage);
+                };
+                var nextFn = function (){
+                    var currPage = this.getAttribute("data-page");                    
+                    currPage++;
+                    turnPag(currPage);
+                    ePre.setAttribute("data-page",currPage);
+                    eNext.setAttribute("data-page",currPage);
+                };
+                renderPag(1);
+
+                /* 
+                * 初次渲染翻页时，判断当前的总页数情况，初始化翻页功能
+                * 情况： 1) count > limit 上翻页：暗色，删除事件 - 下翻页：亮色，点击事件
+                * 情况： 2) count = limit 上下翻页：暗色，删除事件
+                * 情况： 3) count < limit 上下翻页：暗色，删除事件
+                */
+                if (count>limit) {
+                    ePre.style.color = "#d2d2d2";   
+                    ePre.style.cursor = "not-allowed";
+                    ePre.removeEventListener("click",preFn,false);
+                    eNext.addEventListener("click",nextFn,false);
+                }else{
+                    ePre.style.color = "#d2d2d2";
+                    ePre.style.cursor = "not-allowed";
+                    ePre.removeEventListener("click",preFn,false);
+                    eNext.style.color = "#d2d2d2";
+                    eNext.style.cursor = "not-allowed";
+                    eNext.removeEventListener("click",nextFn,false);
                 }
+            }else{
+                dorea(config.ele)[0]===undefined? 
+                console.error(config.ele + " is undefined"):console.error("ele is Incorrect type");
+            }    
+        },
+        drawDate:function (o){
+            var config = {
+                ele: o.ele,    /* 吸附元素 */
+                minyears: o.minyears || 1990,    
+                maxyears: o.maxyears || 2100,    
             };
+            var target = dorea(config.ele)[0],
+                weeks = ["日","一","二","三","四","五","六"],
+                tYear = new Date().getFullYear();
+                tMonth = new Date().getMonth()+1;
+                tDay = new Date().getDate();
+
+            /* 绘制日期头部和星期头部*/
+            var eDiv = creatEle("div");
+            var dateDiv = creatEle("div"),
+                dateHeader = creatEle("div"),
+                dateContent = creatEle("div"),
+                dateSetYM = creatEle("div"),
+                dateSetY = creatEle("span"),
+                dateSetM = creatEle("span"),
+                preY = creatEle("i"),
+                preM = creatEle("i"),                
+                nextY = creatEle("i"),
+                nextM = creatEle("i"),
+                table = creatEle("table"),
+                thead = creatEle("thead"), 
+                tbody = creatEle("tbody"),
+                fragment = document.createDocumentFragment();
+            dateDiv.className = "dorea-date";
+            dateHeader.className = "dorea-date-header";    
+            dateContent.className = "dorea-date-content";    
+            dateSetYM.className = "dorea-date-set-ym";    
+            dateSetY.className = "dorea-date-set-y";    
+            dateSetM.className = "dorea-date-set-m";    
+            preY.className = "dorea-pre-year";  
+            preM.className = "dorea-pre-month";
+            nextY.className = "dorea-next-year";            
+            nextM.className = "dorea-next-month";                                  
+            tbody.className = "dorea-date-tbody";             
+            table.className = "dorea-date-table"; 
+            preM.setAttribute("data-type","5");
+            nextM.setAttribute("data-type","6");
+            dateSetY.setAttribute("data-view","year");
+            dateSetM.setAttribute("data-view","month");
+
+            /* 渲染星期头部 */
+            thead.insertRow(0);
+            for(var i = 0; i<weeks.length; i++){
+                var th = creatEle("th");
+                th.textContent = weeks[i];
+                thead.rows[0].appendChild(th);
+            }  
+            table.appendChild(thead);
+            
+            /* 渲染完整的日期头部 */
+            dateHeader.appendChild(preY);
+            dateHeader.appendChild(preM);
+            dateHeader.appendChild(dateSetYM);
+            dateSetYM.appendChild(dateSetY);
+            dateSetYM.appendChild(dateSetM);
+            dateHeader.appendChild(nextM);            
+            dateHeader.appendChild(nextY);
+            dateDiv.appendChild(dateHeader);            
+            dateDiv.appendChild(table);
+
             /**
-             * @func turnPag
-             * @desc 翻页事件判断，主要用于点击事件发生后，进行页码渲染前的判断
-             * @param { string } cp - 传入一个点击所获得的当前页数
-             * 情况：1) count > limit
-             *          a). limit的前半部分页码，例如 10,5 ，前半部分是 1,2 => 起始页为 1
-             *          b). limit的后半部分页码，例如 10,5 ，后半部分是 9,10 => 起始页为 (count-limit)+1
-             *          b). limit的中间部分，例如 10,5 ，中间部分是 4-7 => 起始页为 (当前页 - (limit/2))+1
-             * 情况：2) count = limit => 起始页为 1
-             * 情况：3) count < limit => 限制10条，但真实数据确只有5条
-             *          a). 发生这类情况，限制条数应以总数据条数为准则
+             * @func getMonthInfo - desc:  得到某年份的具体某月份信息
+             * @param { string } y - 当前年份
+             * @param { string } m - 当前月份（已经是new Date的月份基础上大于1了）
+             * @return { array } info - 返回一个info数组,年月日周几等信息;
+             * @var { number } fdWeek - 该月第一天是周几
+             * @var { number } ldWeek - 该月最后一天是周几
+             * @var { number } lastDay - 当前月的最后一天
+             * @var { number } lmDays - 上一个月的最后一天
+             * @var { number } lmYear - 上一个月的年份
+             * @var { number } lmMonth - 上一个月的月份
+             * 通过获取m月的最后一天，得出m月共有多少天,并补全月份数据,只展示六周的日期
+            */
+            function getMonthInfo(y,m){
+                var info = [],
+                    fdWeek = new Date(y,m-1,1).getDay(), /* 得到的日期是"m"月的前一个 月的最后一天 */
+                    ldWeek = new Date(y,m,0).getDay(), /* 得到的日期是"m"月的后一个 月的第一天 */
+                    lastDay = new Date(y,m,0).getDate(), 
+                    lmDays =  new Date(y,m-1,0).getDate();
+                    lmYear = new Date(y,m-1,0).getFullYear(),
+                    lmMonth = new Date(y,m-1,0).getMonth()+1;
+                    nmYear = new Date(y,m+1,0).getFullYear(),
+                    nmMonth = new Date(y,m+1,0).getMonth()+1;
+                for(var i = lmDays, len = lmDays + (0-fdWeek); i>len; i--){
+                    info.unshift({
+                        year: lmYear,
+                        month: lmMonth, /* 上个月 */
+                        day: i,
+                        week: new Date(y,m-2,i).getDay(),
+                    });  
+                }
+                for(var i = 1; i<=lastDay; i++){
+                    info.push({
+                        year: y,
+                        month: m, /* 本月 */
+                        day: i,
+                        week: new Date(y,m-1,i).getDay(),
+                    });
+                }
+                for(var i = 1,len = 42-info.length; i<=len; i++){
+                    info.push({
+                        year: nmYear,
+                        month: nmMonth, /* 下个月 */
+                        day: i,
+                        week: new Date(y,m,i).getDay(),
+                    });
+                }
+                console.log(info);
+                return info;
+            };
+
+            /**atr = attribute 归属/属于
+             * @func atrMD - desc: 遍历所得的m月是否属于m1月,不属于添加mClass类；遍历所得的d天是否等于d1天,属于添加dClass类；其他的都移除class属性
+             * @param { number } y - 年份
+             * @param { number } m - 月份
+             * @param { number } d - 日期（天）
+             * @param { number } m1 - 月份（对比月份）
+             * @param { number } d1 - 日期（天）（对比日期）
+             * @param { element } ele - 需要添删类名的元素
+             * @param { string } mClass - 不属于m月应该添加的类名
+             * @param { string } dClass - 属于m月d天的应该添加的类名
+            */
+            function atrMD(y,m,d,m1,d1,ele,mClass,dClass){
+                if (y>config.maxyears || y<config.minyears) {
+                    ele.removeEventListener("click",getDates,false);
+                    ele.setAttribute("class","dorea-date-disabled");
+                }else{
+                    if (m===m1 && d === d1) {
+                        ele.setAttribute("class",dClass);
+                    }else if(m!==m1){
+                        ele.setAttribute("class",mClass);
+                    }else{
+                        ele.removeAttribute("class");
+                    }
+                }
+                /* 添加自定义属性data-date */
+                d<10? d = "0" + d : "" ;
+                m<10? m = "0" + m : "" ;
+                ele.setAttribute("data-date",y + "-" + m + "-" + d);
+            };
+            /** 
+             * @func dateView - desc:  绘制一个日期的表格
+             * @param { number } year - 年份
+             * @param { number } month - 月份
+             * @var { array } monthInfo - month月份详细信息（包括上下月）
+             * 进入方法后,（1）.先判断参数month是否大于12;
+             *           （2）.设置日期头部的preM,nextM等元素为可见,并设置上下年份按钮的点击类型等;
+             *           （3）.判断tbody是否存在，存在则不需要再去重复创建子元素
+            */
+            function dateView(year,month){
+                if (month>12) {
+                    month = month - 12;
+                    year = year + 1;
+                }else if (month<1) {
+                    month = month + 12;
+                    year = year -1;   
+                }     
+
+                preM.style.display = "block";
+                nextM.style.display = "block";
+                dateSetM.style.display = "inline-block"; 
+                dateSetM.setAttribute("data-month",month);  
+                dateSetY.setAttribute("data-year",year);
+                dateSetM.textContent = month + "月";             
+                dateSetY.textContent = year + "年";
+                preY.setAttribute("data-type","1");
+                nextY.setAttribute("data-type","3");
+
+                var monthInfo = getMonthInfo(year,month),
+                    isTbody = document.body.contains(dorea(".dorea-date-tbody")[0]),
+                    index = 0;
+                if (isTbody) {
+                    for ( var i = 0, len = 6; i<len; i++ ) {
+                        for ( var j = 0, col = 7; j<col; j++ ) {
+                            var td = tbody.rows[i].cells[j],
+                                date = monthInfo[index];
+                            td.textContent = date.day;
+                            atrMD(date.year,date.month,date.day,month,tDay,td,"dorea-date-not-month","dorea-date-curr");
+                            index++;
+                        }
+                    }
+                }else{
+                    /* 绘制日期的页面效果 */
+                    for ( var i = 0, len = 6; i<len; i++ ) {
+                        tbody.insertRow(i);
+                        for ( var j = 0, col = 7; j<col; j++ ) {
+                            var td = tbody.rows[i].insertCell(j),
+                                date = monthInfo[index];
+                            td.textContent = date.day;
+                            td.addEventListener("click",getDates,false);
+                            atrMD(date.year,date.month,date.day,month,tDay,td,"dorea-date-not-month","dorea-date-curr");
+                            index++;
+                        }
+                    }
+                    table.appendChild(tbody);
+                    dateContent.appendChild(table);               
+                    dateDiv.appendChild(dateContent);
+                    document.body.appendChild(dateDiv);   
+                }               
+            }
+            dateView(tYear,tMonth); /* 初始化执行 */
+
+            /**
+             * @func atrYears - desc:  （1）.添加文本节点内容;
+             *                         （2）.是否符合所规定的年限范围;
+             *                         （3）.符合：移除cName类,添加toYears事件，添加自定义属性;
+             *                         （4）.不符合：添加cName类，移除toYears事件，移除自定义属性;
+             * @param { number } year - 传入判断的年份
+             * @param { element } ele - 传入判断的年份的元素
+             * @param { sub } sub - 元素下标
+             * @param { cName } ele - 符合规定的元素所需添加的类名
+            */
+            function atrYears(year,ele,i,cName){
+                ele.textContent = year;
+                if (year>config.maxyears || year<config.minyears) {
+                    ele.setAttribute("class",cName);
+                    ele.removeAttribute("data-years");
+                    ele.removeEventListener("click",toYears,false);
+                }else{
+                    ele.removeAttribute("class");
+                    /* 中间位置的年份,长期选中状态 */  
+                    i === 7?ele.className = "dorea-year-curr" :"";                  
+                    ele.setAttribute("data-years",year);
+                    ele.addEventListener("click",toYears,false);
+                }
+            }
+            /**
+             * @func drawYear - desc:  绘制一个年份/月份
+             * @param { string } type - 绘制类型
+             * @param { string } years - 年份
+             * @param { string } month - 月份
+             * 进入方法后,（1）.重置上下年份的点击类型,且月份点击视为不可见等;
+             *           （2）.判断yLists是否存在，存在则不需要再去重复创建子元素
+            */
+            function drawYear(type,years,month){
+                preM.style.display = "none";
+                nextM.style.display = "none";
+                dateSetM.style.display = "none";
+                dateSetY.setAttribute("data-year",years);  
+
+                switch (type) {
+                    case "year":
+                        preY.setAttribute("data-type","2");
+                        nextY.setAttribute("data-type","4");
+                        dateSetY.textContent = (years-7)+"年-"+(new Number(years)+7)+"年";
+
+                        var startY = years - 7,
+                            yLists = dorea(".dorea-years-list")[0];
+                            isYList = document.body.contains(yLists);
+                        if (isYList) {
+                            var eLis = yLists.getElementsByTagName("li");
+                            for(var i = 0, len = 15; i<len; i++){
+                                atrYears(startY+i,eLis[i],i,"dorea-year-disabled");
+                            }
+                        }else{
+                            var eUl = creatEle("ul");
+                            eUl.className = "dorea-years-list";
+                            for(var i = 0, len = 15; i<len; i++){
+                                var eLi = creatEle("li");
+                                atrYears(startY+i,eLi,i,"dorea-year-disabled")
+                                fragment.appendChild(eLi);
+                            }
+                            eUl.appendChild(fragment);
+                            dateContent.appendChild(eUl);
+                        }                        
+                        break;
+                    case "month":
+                        preY.setAttribute("data-type","7");
+                        nextY.setAttribute("data-type","8");
+                        dateSetY.textContent = years;
+                        var mLists = dorea(".dorea-months-list")[0];
+                            isMList = document.body.contains(mLists);
+                        /* 创建月份视图 */
+                        if (!isMList) {
+                            var eUl = creatEle("ul");
+                            eUl.className = "dorea-months-list";
+                            for(var i = 0, len = 12; i<len; i++){
+                                var eLi = creatEle("li");
+                                eLi.setAttribute("data-month",i+1);
+                                eLi.textContent = i+1 + "月";
+                                eLi.addEventListener("click",toMonths,false);
+                                fragment.appendChild(eLi);
+                            }
+                            eUl.appendChild(fragment);
+                            dateContent.appendChild(eUl);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            /**
+             * @func toYears - desc:  跳转至某年份
+             * 进入方法后,（1）.先获取点击事件触发元素的年份和dateSetM元素的月份
+             *           （2）.删除年份视图
+             *           （3）.重新执行dateView方法,绘制新的日期视图
+            */            
+            function toYears(){
+                var yLists = dorea(".dorea-years-list"),
+                    year = this.getAttribute("data-years"),
+                    month = dateSetM.getAttribute("data-month");
+                yLists[0].parentNode.removeChild(yLists[0]);
+                dateView(year,month);
+            }
+            function toMonths(){
+                var mLists = dorea(".dorea-months-list"),
+                    year = dateSetY.getAttribute("data-year"),
+                    month = this.getAttribute("data-month");
+                mLists[0].parentNode.removeChild(mLists[0]);
+                dateView(year,month);
+            }
+            /**
+             * @func getDates - desc:  点击后得到一个完整的日期（年月日）,并在吸附元素输出值
+             * @func toggleYM - desc: 根据点击类型判断切换年月份
+             * @var  type: 1：上一年；2：上一年份范围； 3：下一年；4：下一年份范围；5：上一个月；6：下一个月；7：上一年（月份）；8：下一年（月份）；
              * 
             */
-            var turnPag = function (cp){
-                console.log("当前第 "+cp+" 页");
-                if (count>limit) {
-                    if ( cp<=midN ) { //判断是否属于前部分
-                        renderPag(1,cp);
-                    }else if( cp<=count && cp>count - midN ){ //判断是否属于后部分
-                        renderPag( (count - limit)+1 ,cp) ;
-                    }else{
-                        renderPag( (cp-midN)+1 ,cp);
-                    }
-                }else if (count===limit || count<limit) {
-                    renderPag(1);
-                }else{
-                    renderPag( (count - midN)-1 ,cp);
-                }
-                
-                for (var i = 0; i<eUlChild.length; i++) {
-                    eUlChild[i].style.backgroundColor = "#fff";
-                    if (eUlChild[i].getAttribute("data-page") == cp) {
-                        eUlChild[i].style.backgroundColor = "#1E9FFF"; /* 选中状态 */
-                    }
-                } 
-            };
-            /**
-             * @func preFn 
-             * @desc 上翻页
-             * @func nextFn 
-             * @desc 下翻页
-             */
-            var preFn = function (){
-                var currPage = this.getAttribute("data-page");
-                currPage--;
-                turnPag(currPage);
-                ePre.setAttribute("data-page",currPage);
-                eNext.setAttribute("data-page",currPage);
-            };
-            var nextFn = function (){
-                var currPage = this.getAttribute("data-page");                    
-                currPage++;
-                turnPag(currPage);
-                ePre.setAttribute("data-page",currPage);
-                eNext.setAttribute("data-page",currPage);
-            };
-            renderPag(1);
-
-            /* 
-             * 初次渲染翻页时，判断当前的总页数情况，初始化翻页功能
-             * 情况： 1) count > limit 上翻页：暗色，删除事件 - 下翻页：亮色，点击事件
-             * 情况： 2) count = limit 上下翻页：暗色，删除事件
-             * 情况： 3) count < limit 上下翻页：暗色，删除事件
-            */
-            if (count>limit) {
-                ePre.style.color = "#d2d2d2";   
-                ePre.style.cursor = "not-allowed";
-                ePre.removeEventListener("click",preFn,false);
-                eNext.addEventListener("click",nextFn,false);
-            }else{
-                ePre.style.color = "#d2d2d2";
-                ePre.style.cursor = "not-allowed";
-                ePre.removeEventListener("click",preFn,false);
-                eNext.style.color = "#d2d2d2";
-                eNext.style.cursor = "not-allowed";
-                eNext.removeEventListener("click",nextFn,false);
+            var iBtn = dateHeader.querySelectorAll("i");
+            for(var i = 0, len = iBtn.length; i < len; i++){
+                iBtn[i].addEventListener("click",toggleYM,false);
             }
+            function getDates(){
+                var date = this.getAttribute("data-date");
+                dateDiv.parentNode.removeChild(dateDiv);
+                target.value = date;
+            }
+            function toggleYM(){
+                var type = this.getAttribute("data-type"),
+                    dataYear = new Number(dateSetY.getAttribute("data-year")),
+                    dataMonth = new Number(dateSetM.getAttribute("data-month"));
+                switch (type) {
+                    case "1":
+                        dateView(dataYear-1,dataMonth);
+                        break;
+                    case "2":
+                        drawYear("year",dataYear-15,dataMonth);
+                        break;
+                    case "3":
+                        dateSetY.textContent = dataYear +1;
+                        dateView(dataYear+1,dataMonth);
+                        break;
+                    case "4":
+                        drawYear("year",dataYear+15,dataMonth);
+                        break;
+                    case "5":
+                        dateView(dataYear,dataMonth-1);
+                        break;
+                    case "6":
+                        dateView(dataYear,dataMonth+1);
+                        break;
+                    case "7":
+                        drawYear("month",dataYear-1,dataMonth);
+                        break;
+                    case "8":
+                        drawYear("month",dataYear+1,dataMonth);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            /* 选择年份 */
+            dateSetY.addEventListener("click",function (){
+                var type = this.getAttribute("data-view"),
+                    years = this.getAttribute("data-year"),
+                    month = new Number(dateSetM.getAttribute("data-month"));
+                drawYear(type,years,month);
+            });
+            /* 选择月份 */
+            dateSetM.addEventListener("click",function (){
+                var type = this.getAttribute("data-view"),
+                    month = this.getAttribute("data-month"),
+                    years = new Number(dateSetY.getAttribute("data-year"));
+                // console.log(years + month);
+                drawYear(type,years,month);
+            });
         },
+        date:function (o){
+            var idReg = /#/i,
+                isId = idReg.test(o.ele),
+                target = dorea(o.ele)[0];
+            if (isId) { 
+                target.addEventListener("click",function (){
+                    var eDate = dorea(".dorea-date"),
+                        isDate = document.body.contains(eDate[0]);
+                    /* 判断eDate元素是否存在于页面,当执行多个date方法时,页面都只显示一个eDate元素*/
+                    if (isDate) {
+                        for(var i = 0; i<eDate.length; i++){
+                            eDate[i].parentNode.removeChild(eDate[i]);
+                        }
+                    } 
+                    dorea.drawDate(o);
+                    var eDate = dorea(".dorea-date")[0],                    
+                        that = this,
+                        eleScrolTop = document.documentElement.scrollTop,
+                        eleTop = that.offsetTop,
+                        eleHeight = that.offsetHeight,
+                        eleLeft = that.offsetLeft;
+                    if (eleTop-eleScrolTop > 500) {
+                        eDate.style.top = (eleTop - eDate.offsetHeight)-7 +"px";
+                    }else{
+                        eDate.style.top = (eleTop + eleHeight)+7 +"px";
+                    }
+                    eDate.style.left = eleLeft + "px";
+                    eDate.style.opacity = "1";                    
+                });
+            }else{
+                console.error("ele is Incorrect type");
+            }
+        }
     });
     
     dorea.fn.init.prototype = dorea.fn;

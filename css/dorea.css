@@ -5,11 +5,15 @@ li{
 a{
     text-decoration: none;
 }
+*{
+    box-sizing: border-box;
+}
 /* 样式清除 end **/
 
 /** 按钮样式 */
 body{
     font-family: "Microsoft Yahei";
+    /* font-family: Georgia, serif; */
     font-size: 12px;
 }
 button.btn{
@@ -28,7 +32,6 @@ button.btn{
     -webkit-appearance: none;
     transition: all .3s;
     -webkit-transition: all .3s;
-    box-sizing: border-box;
 }    
 button.btn:hover{
     opacity: .83;     
@@ -184,7 +187,6 @@ input[type='text'],select{
     color: #555;
     border: 1px solid #e6e6e6;
     border-radius: 3px;
-    box-sizing: border-box;    
 }
 input[type='text']{
     padding: 0 0 0 10px;
@@ -232,7 +234,6 @@ input[type='text']:focus,select:focus{
     background-size: 22px; 
     color:#807a62; 
     cursor:pointer;
-    box-sizing: border-box;
 }
 .select>ul{
     position:absolute;  
@@ -244,7 +245,6 @@ input[type='text']:focus,select:focus{
     border:1px solid #e6e6e6;  
     animation: transtate .5s;
     -webkit-animation: transtate .5s;
-    box-sizing: border-box;
 }
 .select>ul>li{
     height:24px; 
@@ -329,13 +329,11 @@ input[type='text']:focus,select:focus{
 /* 共同样式 */
 .timeline>ul>li div.timeline-content{
     text-align: left;    
-    box-sizing: border-box;
 }   
 .timeline>ul>li img{
     display: block;
     padding: 10px 0;
     width: 100%;
-    box-sizing: border-box;
     background-color: #d3d3d3;
 }
 .timeline>ul>li p{
@@ -360,24 +358,24 @@ input[type='text']:focus,select:focus{
     border: 1px solid #393D49;
     text-align: center;
     cursor: pointer;
-    box-sizing: border-box;
 }
 /* 时间线 end **/
 /** 分页 */
 .pagination{
     display: inline-block;
+    height: 30px;
 }
 .pagination>ul{
     padding: 0;
     margin: 0;
     display: inline-block;
-    border: 1px solid #e2e2e2;
+    height: 100%;
 }
 .pagination>ul>li{
     float: left;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-right-color: #e2e2e2;
+    height: 100%;
+    border: 1px solid #e2e2e2;
+    border-left-width: 0px;
 }
 .pagination>ul>li:first-child{
     background-color: rgb(30, 159, 255);
@@ -388,7 +386,7 @@ input[type='text']:focus,select:focus{
 .pagination>ul>li>a{
     display: inline-block;
     width: 38px;
-    height: 30px;
+    height: 100%;
     line-height: 30px;
     text-align: center;
     color: #333;
@@ -399,21 +397,167 @@ input[type='text']:focus,select:focus{
 .pagination>a{
     display: inline-block;
     width: 50px;
-    height: 30px;
+    height: 100%;
     line-height: 30px;
     text-align: center;
     color: #333; 
     border: 1px solid #e2e2e2;
 }
 .pagination a.page-pre{
-    margin-right: -1px;
     float: left;
     color: #d2d2d2;
     cursor: not-allowed;
-    border-right-width: 0px;    
 }
 .pagination a.page-next{
     float: right;
-    border-left-width: 0px;
 }
 /* 分页 end **/
+/** 日期  start */
+.dorea-date{
+    padding: 13px 10px;   
+    position: absolute; 
+    width: 272px;
+    font-size: 13px;
+    background-color: #fff;
+    border: 1px solid #d2d2d2;
+    border-radius: 3px;
+    opacity: 0; 
+    z-index: 99; 
+    transition: all .5s;
+}
+.dorea-date-header{
+    position: relative;
+    height: 35px;
+    text-align: center;
+    /* border-bottom: 1px solid #d2d2d2; */
+}
+.dorea-date-header>i{
+    position: absolute;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position-y: 2px;
+    cursor: pointer;
+}
+.dorea-date-header>i.dorea-pre-year{
+    left: 13px;
+    background-image: url("../images/date-pre-year.png");
+}
+.dorea-date-header>i.dorea-pre-month{
+    left: 40px;
+    background-image: url("../images/date-pre-month.png");
+}
+.dorea-date-header>i.dorea-next-month{
+    right: 32px;
+    background-image: url("../images/date-next-month.png");
+}
+.dorea-date-header>i.dorea-next-year{
+    right: 5px;
+    background-image: url("../images/date-next-year.png");
+}
+.dorea-date-header .dorea-date-set-ym{
+    display: inline-block;
+    vertical-align: bottom;
+    height: 30px;
+    line-height: 30px;
+    color: #666;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.dorea-date-header .dorea-date-set-ym>span{
+    padding: 0 5px;    
+    display: inline-block;
+    vertical-align: bottom;
+    cursor: pointer;
+}
+.dorea-date-content{
+    position: relative;
+}
+.dorea-date-table{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.dorea-date-table td,.dorea-date-table th{
+    position: relative;
+    width: 36px;
+    height: 30px;
+    padding: 5px;
+    color: #666;
+    font-weight: 500;
+    text-align: center;
+}
+.dorea-date-table td:hover{
+    background-color: #eaeaea;
+    color: #333;
+    cursor: pointer;    
+}
+.dorea-date-curr{
+    background-color: #eaeaea;
+    color: #333;
+}
+.dorea-date-table .dorea-date-not-month{
+    color: #d2d2d2;
+}
+ul.dorea-years-list,ul.dorea-months-list{
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    background-color: #fff;
+}
+ul.dorea-years-list>li,ul.dorea-months-list>li{
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    width: 33.3%;
+    height: 36px;
+    line-height: 36px;
+    margin: 3px 0;
+    text-align: center;
+    cursor: pointer;
+}
+ul.dorea-years-list>li:hover{
+    background-color: #eaeaea;
+}
+.dorea-year-curr{
+    background-color: #eaeaea;
+}
+.dorea-year-disabled{
+    color: #d2d2d2;
+}
+.dorea-year-disabled:hover{
+    color: #d2d2d2!important;
+    cursor: not-allowed!important;
+    background-color: #fff!important;
+}
+.dorea-date-disabled{
+    color: #d2d2d2!important;
+}
+.dorea-date-disabled:hover{
+    color: #d2d2d2!important;
+    cursor: not-allowed!important;
+    background-color: #fff!important;
+}
+ul.dorea-months-list>li{
+    height: 42px;
+    line-height: 42px;
+}
+/* 日期  end **/
+/** 滚动条 */
+.dorea-scroll-bar{
+    position: absolute; 
+    right: 0; 
+    height: 166px;
+    width: 10px;
+    border-radius: 20px;
+    background: #ccc;
+}
+/* 滚动条 end **/
