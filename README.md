@@ -63,3 +63,10 @@ dorea.pagination({
     <a href="javascript:;" class="page-next">下一页</a>
 </div>
 ```
+```
+dorea.date({
+    ele: "#dorea-date-input2", //吸附元素
+    minyears: 2018,  //最小年份限制，默认1900
+    maxyears: 2018  //最大年份限制，默认2099
+});
+```
