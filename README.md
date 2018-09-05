@@ -66,7 +66,7 @@ dorea.pagination({
 ```
 dorea.date({
     ele: "#dorea-date-input2", //吸附元素
-    minyears: 2018,  //最小年份限制，默认1900
-    maxyears: 2018  //最大年份限制，默认2099
+    minyears: 1990,  //最小年份限制，默认1900
+    maxyears: 2099  //最大年份限制，默认2099
 });
 ```
